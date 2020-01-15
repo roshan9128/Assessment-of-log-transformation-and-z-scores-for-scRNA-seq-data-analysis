@@ -9,7 +9,7 @@ library(feather)
 
 args <- commandArgs(trailingOnly=TRUE)
 input_file <- args[1]
-output_file_prefix <- args[2]
+output_prefix <- args[2]
 
 #Read in data.
 
