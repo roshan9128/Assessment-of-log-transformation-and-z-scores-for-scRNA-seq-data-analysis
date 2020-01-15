@@ -26,8 +26,9 @@ colnames(raw_data) <- paste0("Cell",1:ncol(raw_data))
 raw_data <- as(raw_data,"dgCMatrix")
 
 #Normalize data.
+#Assuming input already cleaned, so set min_cells=1.
 
-normalized_data <- sctransform::vst(raw_data)$y
+normalized_data <- sctransform::vst(raw_data,min_cells=1)$y
 
 #Change normalized matrix to appropriate class.
 #Get error "unable to find an inherited method for function ‘writeMM’ for signature ‘"matrix"’" if don't do this step.
@@ -37,10 +38,3 @@ normalized_data <- as(normalized_data,"dgCMatrix")
 #Output data.
 
 writeMM(normalized_data,file=paste0(output_file_prefix,"_sctransform_normalized.mtx"))
-
-#Normalization will only have been done on certain features.
-#Output the indices of the features chosen to a separate text file.
-
-feature_indices <- sapply(strsplit(rownames(normalized_data),"Feature"),"[[",2) #Change e.g. "Feature6" to "6".
-
-write.table(feature_indices,file=paste0(output_file_prefix,"_sctransform_normalization_feature_indices.txt"),row.names=FALSE,col.names=FALSE,quote=FALSE)
