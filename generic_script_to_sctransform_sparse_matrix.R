@@ -2,6 +2,7 @@
 
 library(sctransform)
 library(Matrix)
+library(feather)
 
 #Accept paths to input sparse matrix file and output file prefix on command line.
 #Input file can be either zipped or unzipped, I believe.
@@ -30,11 +31,6 @@ raw_data <- as(raw_data,"dgCMatrix")
 
 normalized_data <- sctransform::vst(raw_data,min_cells=1)$y
 
-#Change normalized matrix to appropriate class.
-#Get error "unable to find an inherited method for function ‘writeMM’ for signature ‘"matrix"’" if don't do this step.
+#Save as feather file.
 
-normalized_data <- as(normalized_data,"dgCMatrix")
-
-#Output data.
-
-writeMM(normalized_data,file=paste0(output_file_prefix,"_sctransform_normalized.mtx"))
+write_feather(x=as.data.frame(normalized_data),path=paste0(output_prefix,"_sctransform_normalized.feather"))
